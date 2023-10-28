@@ -45,4 +45,4 @@ def get_binary_file_downloader_html(bin_file, file_label):
     b64 = base64.b64encode(data).decode()
     return f'<a href="data:file/txt;base64,{b64}" download="{file_label}.txt">Download {file_label}</a>'
 if reminder_time is not None:
-    st.markdown(get_binary_file_downloader_html("reminder.txt", "Download Reminder"), unsafe_allow_html=True)
+    st.markdown(get_binary_file_downloader_html("reminder.txt", "File"), unsafe_allow_html=True)
