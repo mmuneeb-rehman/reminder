@@ -1,7 +1,5 @@
 import streamlit as st
 import datetime
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 st.title("Date and Time Calculator")
 
@@ -12,7 +10,7 @@ hour = st.text_input("Enter the hour (0-23):")
 minute = st.text_input("Enter the minute (0-59):")
 am_pm = st.selectbox("Select AM or PM:", ["AM", "PM"])
 reminder_message = st.text_input("Enter reminder message:")
-save_to_file = st.button("Save to PDF")
+save_to_file = st.button("Save to File")
 
 reminder_time = None
 
@@ -33,16 +31,20 @@ except ValueError:
     st.write("Invalid date and time. Please enter valid values.")
 
 if save_to_file:
-    pdf_filename = "reminder.pdf"
+    reminder = f"Reminder: {reminder_message}\nTime: {reminder_time.strftime('%I:%M %p %Z time on %m/%d/%Y')}"
+    with open("reminder.txt", "w") as file:
+        file.write(reminder)
+    st.write("File Saved Successfully")
 
-    c = canvas.Canvas(pdf_filename, pagesize=letter)
-    c.drawString(100, 750, "Reminder:")
-    c.drawString(100, 730, reminder_message)
-    c.drawString(100, 710, "Time:")
-    c.drawString(100, 690, reminder_time.strftime('%I:%M %p %Z time on %m/%d/%Y'))
-    c.save()
+# Provide a download link to the user
 
-    st.write("PDF Saved Successfully")
+import base64
 
-    # Provide a download link to the user
-    st.markdown(get_binary_file_downloader_html(pdf_filename, "Download Reminder PDF"), unsafe_allow_html=True)
+def get_binary_file_downloader_html(bin_file, file_label):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    b64 = base64.b64encode(data).decode()
+    return f'<a href="data:file/txt;base64,{b64}" download="{file_label}.txt">Download {file_label}</a>'
+
+if reminder_time is not None:
+    st.markdown(get_binary_file_downloader_html("reminder.txt", "File"), unsafe_allow_html=True)
