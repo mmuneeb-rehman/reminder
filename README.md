@@ -1,1 +1,1 @@
-# reminderokokokokok
+input time and generate file
